@@ -15,14 +15,37 @@ public:
     // Return value:       true if the input is valid, and there are some duplications in the array number
     //                     otherwise false
     bool duplicate(int numbers[], int length, int* duplication) {
-        bool flag = False;
+        bool flag = false;
         if(length==0){
         	return flag;
 		}
 		for(int i=0;i<length;i++){
-			
-			
+			int count_change = 0;
+			cout<<"i: "<<i<<" numbers[i]: "<<numbers[i]<<endl;
+			while(i!=numbers[i] && count_change<length-1){
+				count_change++;
+				int m=numbers[i];
+				if(numbers[i]!=numbers[m]){
+					numbers[i]=numbers[m];
+				    numbers[m]=m;
+				}else{
+					flag=true;
+					cout<<"flag: "<<flag<<endl;
+					cout<<"numbers[i]: "<<numbers[i]<<endl;
+					*duplication=numbers[i];
+					return flag;
+				}				
+			} 
+			if(count_change == length-1 && i!=numbers[i]){
+				flag=true;
+				cout<<"flag: "<<flag<<endl;
+				cout<<"numbers[i]: "<<numbers[i]<<endl;
+				*duplication=numbers[i];
+				return flag;
+			}
+					
 		}
+		return flag;
     }
 };
  
@@ -59,9 +82,13 @@ int main(){
 		}
 		cout<<"\n----------------------\n";
 		
-		bool flag = False;
-		int* duplication;
-		flag = duplicate(int arr[], int size, int* duplication);
+		bool flag = false;
+		cout<<"init flag: "<<flag<<endl;
+		int duplication;
+		Solution s;
+		flag = s.duplicate(arr, size, &duplication);
+		cout<<"flag: "<<flag<<endl;
+		cout<<"duplication: "<<duplication<<endl;
 		 
 	}
 	return 0;
