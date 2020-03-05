@@ -1,75 +1,74 @@
 #include <cstdio>
 #include <iostream>
 #include <vector>
-using namespace std; 
-
-
-//奇数部分在前，偶数部分在后 
-//奇数和奇数，偶数和偶数之间的相对位置不发生改变
+using namespace std;
  
 class Solution {
 public:
-	void reOrderArray(vector<int> &array){
-		//唉，乱写的，竟然过了。思路就是找到一个连续的奇数段，一起往前移动 
-		int length = array.size();
-        int k = length-1;
-        
-        while(k>0){	
-        	int s=k;
-        	while(s>=0 &&isOdd(array[s])){
-        		s--;
+    void reOrderArray(vector<int> &array) {
+        int len = array.size();
+        int even_tag = -1;
+        int even_len = 0;
+        int i = 0;
+        cout<<"reorder"<<endl;
+        while(even_tag+even_len < len){
+        	if( isEven(array[i])){ // 遇到偶数 
+        	    cout<<"if( isEven(array[i]))"<<endl;
+        		if(even_tag == -1){
+        			even_tag = i;
+        			even_len++;
+				}else{
+					even_len++;
+				}
+				i++; 
+        		cout<<"even_tag: "<<even_tag<<" even_len: "<<even_len<<endl;
+			}else{ //遇到奇数 
+			    cout<<"if( !isEven(array[i]))"<<endl;
+				if(even_tag == -1){//目前还没有遇到偶数，所以继续遍历 
+					i++;
+				}else{//目前需要和前面的偶数序列调换顺序 
+					int temp_odd = array[i] ;
+					for(int j = even_len;j>0;j--){
+						array[i - (even_len - j)] = array[even_tag + j - 1];
+					}
+					array[even_tag] = temp_odd;
+					i=even_tag;
+					even_tag = -1;
+					even_len = 0;
+				}
 			}
-			//[s+1,k] 都是奇数， 而 s是偶数
-			//if(s<0) 说明 0 的位置都是奇数
-			if(s<0) return;
-			int even_num = array[s];//s,偶数存在的地方 
-			int to_k = s;
-			while(to_k<k){
-				array[to_k] = array[to_k+1];
-				to_k++;
-			}
-			array[k] = even_num; 
-			k--;
-			 
-		}
-        
-	}
-	
-	
-    void reOrderArray_changeOrder(vector<int> &array) {
-    // 这个解答，会导致奇数和偶数之前的位置会发现变化 
-        int length = array.size();
-        int i = 0, j = length-1;
-        while(j>i){
-        	while(i<j && isOdd(array[i])){//是奇数则继续往后走 
-        		i++;
-			}
-			while(i<j && !isOdd(array[j])){//是偶数则继续往前走 
-				j--;
-			} 
-			if(i<j){
-				int temp = array[i];
-				array[i] = array[j];
-				array[j] = temp;
-			}
+				vector<int>::iterator iter=array.begin();
+				for(;iter!=array.end();iter++){
+					cout<<*iter<<" "; 
+				}
+				cout<<endl;
 		}
     }
     
-    bool isOdd(int x){
-    	if((x&1)==0){
-	        return false; //偶数 
-	    }
-    	return true;
+    bool isEven(const int n){
+    	return (n&1)==0;
+		//return !(n%2);
 	}
 };
 
 int main(){
-	//vector<int> a{1,2,3,4,5,6,7};
-	vector<int> a{2,1};
+	vector<int> arr;
+	for(int i =1;i<=10;i++){
+		arr.push_back(i);
+	}
+
+
+	vector<int>::iterator iter=arr.begin();
+	for(;iter!=arr.end();iter++){
+		cout<<*iter<<" "; 
+	}
+	cout<<endl;
+	//cout<<rand()<<endl;
 	Solution s;
-	s.reOrderArray(a);
-	for(int i ; i<a.size(); i++){
-		cout<<a[i]<<" ";
+	s.reOrderArray(arr);
+    iter=arr.begin();
+	for(;iter!=arr.end();iter++){
+		cout<<*iter<<" "; 
 	}
 	return 0;
-}
+} 
